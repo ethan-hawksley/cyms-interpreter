@@ -1,0 +1,23 @@
+.const N 100 // Total iterations
+.const i 0 // Count variable
+.const num1 1 // Address of num1
+.const num2 2 // Address of num2
+
+// Initialise variables.
+cpy 0 i
+CPY 1 num1
+CPY 0 num2
+
+@loop
+ADD $num1 $num2 num1 // Add num1 and num2, storing the result in num1.
+OUT $num1 // Output the value of num1.
+INC i // Increment the count variable.
+BRE @end $i N // Branch to @end if i equals the total number of iterations.
+
+ADD $num1 $num2 num2
+OUT $num2
+INC i
+BNE @loop $i N // Branch to @loop if i isn't the total number of iterations.
+
+@end
+HLT // Stop the program.
