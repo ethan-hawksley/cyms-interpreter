@@ -29,6 +29,30 @@ body {
         Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
+dialog {
+    margin: auto;
+}
+
+#examples-container {
+    display: flex;
+    padding: 3rem;
+    padding-top: 1rem;
+    gap: 2rem;
+    align-items: center;
+    flex-direction: column;
+}
+
+#close-examples {
+    aspect-ratio: 1;
+    width: 3em;
+    margin-left: auto;
+}
+
+.load-example {
+    width: 7em;
+    height: 3em;
+}
+
 h1 {
     text-align: center;
     font-size: 2em;

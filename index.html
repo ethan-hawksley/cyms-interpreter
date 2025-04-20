@@ -9,6 +9,12 @@
 </head>
 <body>
 <div id="container">
+    <dialog id="examples">
+        <div id="examples-container">
+            <button id="close-examples">Close</button>
+            <button data-file-name="fibonacci" class="load-example">Fibonacci Numbers</button>
+        </div>
+    </dialog>
     <h1>CYMS Interpreter</h1>
     <main>
         <div id="left-bar">
@@ -27,7 +33,7 @@
             <div id="connections">
                 <a class="connection-link" href="https://hawksley.dev">Home</a>
                 <a class="connection-link" href="https://github.com/ethan-hawksley/cyms-interpreter">Repository</a>
-                <span class="connection-link" id="info" title="Example scripts can be found in the repository">?</span>
+                <button class="connection-link" id="show-examples">Show Examples</button>
             </div>
             <canvas height="144" id="screen" width="255"></canvas>
             <ul id="terminal"></ul>

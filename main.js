@@ -7,6 +7,10 @@ const stopButton = document.getElementById("stop");
 const saveButton = document.getElementById("save");
 const loadButton = document.getElementById("load");
 const loadInput = document.getElementById("load-input");
+const showExamplesButton = document.getElementById("show-examples");
+const examplesDialog = document.getElementById("examples");
+const closeExamplesButton = document.getElementById("close-examples");
+const loadExampleButtons = document.getElementsByClassName("load-example");
 const interpreter = new Interpreter();
 
 stopButton.disabled = true;
@@ -44,8 +48,35 @@ loadInput.addEventListener("change", () => {
   if (file) {
     const reader = new FileReader();
     reader.onload = () => {
+      // Set code textbox to the content of the file.
       cymsCode.value = reader.result;
     };
     reader.readAsText(file);
   }
 });
+
+showExamplesButton.addEventListener("click", () => {
+  console.log("opening");
+  examplesDialog.showModal();
+});
+
+closeExamplesButton.addEventListener("click", () => {
+  console.log("closing");
+  examplesDialog.close();
+});
+
+for (let i = 0; i < loadExampleButtons.length; i++) {
+  loadExampleButtons[i].addEventListener("click", async () => {
+    // Fetch from https://hawksley.dev/cyms-interpreter/examples/file.cyms
+    const promise = fetch(
+      "./examples/" + loadExampleButtons[i].dataset.fileName + ".cyms",
+    );
+    promise.then((response) => {
+      response.text().then((text) => {
+        // Set code box to the 
+        cymsCode.value = text;
+      });
+    });
+    examplesDialog.close();
+  });
+}
