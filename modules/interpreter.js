@@ -29,7 +29,7 @@ export class Interpreter {
     this.#indexOffset = -1;
     this.#screen = new Screen();
     this.#inputQueue = new Queue();
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener("keyup", (event) => {
       if (this.#active) {
         this.#inputQueue.enqueue(event.key.charCodeAt(0));
       }
