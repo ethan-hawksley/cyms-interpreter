@@ -11,7 +11,6 @@ export class Interpreter {
   #code;
   #mem;
   #pc;
-  #overflow;
   #memSize;
   #numberOfRegisters;
   #timeOffset;
@@ -108,7 +107,6 @@ export class Interpreter {
     // Array large enough to hold normal memory and all the registers
     this.#mem = new Array(this.#memSize + this.#numberOfRegisters).fill(0);
     this.#pc = 0;
-    this.#overflow = false;
     if (this.#active && this.#code.length > 0) {
       this.#terminal.log("Started");
       // Run a cycle each frame
@@ -225,12 +223,6 @@ export class Interpreter {
       case "BNL":
         this.#bnl(operands);
         break;
-      case "BRO":
-        this.#bro(operands);
-        break;
-      case "BNO":
-        this.#bno(operands);
-        break;
       case "JSR":
         this.#jsr(operands);
         break;
@@ -310,10 +302,8 @@ export class Interpreter {
   #div(operands) {
     if (operands[1] === 0) {
       // Store 0 when dividing by 0
-      this.#overflow = true;
       this.#mem[operands[2]] = 0;
     } else {
-      this.#overflow = false;
       this.#mem[operands[2]] = Math.floor(
         operands[0] / operands[1],
       );
@@ -380,18 +370,6 @@ export class Interpreter {
 
   #bnl(operands) {
     if (operands[1] >= operands[2]) {
-      this.#pc = operands[0];
-    }
-  }
-
-  #bro(operands) {
-    if (this.#overflow) {
-      this.#pc = operands[0];
-    }
-  }
-
-  #bno(operands) {
-    if (!this.#overflow) {
       this.#pc = operands[0];
     }
   }
