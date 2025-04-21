@@ -274,8 +274,7 @@ export class Interpreter {
 
   #swp(operands) {
     const temp = this.#mem[operands[1]];
-    this.#mem[operands[1]] =
-      this.#mem[operands[0]];
+    this.#mem[operands[1]] = this.#mem[operands[0]];
     this.#mem[operands[0]] = temp;
   }
 
@@ -301,28 +300,29 @@ export class Interpreter {
 
   #div(operands) {
     if (operands[1] === 0) {
-      // Store 0 when dividing by 0
+      // Store 0 when the divisor is 0.
       this.#mem[operands[2]] = 0;
     } else {
-      this.#mem[operands[2]] = Math.floor(
-        operands[0] / operands[1],
-      );
+      this.#mem[operands[2]] = Math.floor(operands[0] / operands[1]);
     }
   }
 
   #mod(operands) {
-    this.#mem[operands[2]] = operands[0] % operands[1];
+    if (operands[1] === 0) {
+      // Store 0 when the divisor is 0.
+      this.#mem[operands[2]] = 0;
+    } else {
+      this.#mem[operands[2]] = operands[0] % operands[1];
+    }
   }
 
   #and(operands) {
     // A value >= 1 is considered truthy
-    this.#mem[operands[2]] =
-      operands[0] >= 1 && operands[1] >= 1;
+    this.#mem[operands[2]] = operands[0] >= 1 && operands[1] >= 1;
   }
 
   #orr(operands) {
-    this.#mem[operands[2]] =
-      operands[0] >= 1 || operands[1] >= 1;
+    this.#mem[operands[2]] = operands[0] >= 1 || operands[1] >= 1;
   }
 
   #xor(operands) {
