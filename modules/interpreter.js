@@ -12,7 +12,8 @@ export class Interpreter {
   #mem;
   #pc;
   #overflow;
-  #memOffset;
+  #memSize;
+  #numberOfRegisters;
   #timeOffset;
   #indexOffset;
   #callStack;
@@ -24,9 +25,10 @@ export class Interpreter {
     this.#DEBUG = false;
     this.#active = false;
     this.#terminal = new Terminal();
-    this.#memOffset = 2;
-    this.#timeOffset = -2;
-    this.#indexOffset = -1;
+    this.#memSize = 4096;
+    this.#numberOfRegisters = 2;
+    this.#timeOffset = 0;
+    this.#indexOffset = 1;
     this.#screen = new Screen();
     this.#inputQueue = new Queue();
     document.addEventListener("keyup", (event) => {
@@ -49,13 +51,16 @@ export class Interpreter {
       .map((i) => i.split("//")[0].trim()) // remove anything after //
       .filter((i) => i !== "") // remove blank lines
       .map((i) => i.split(" ")); // turn into array of opcode and operands
-    // time, index, and 4096 normal addresses
+    // 4096 normal addresses, time, and index
     // +2 offset applied to each access of the array
     this.#code = [];
     let lineNumber = 0;
     let postprocessedCode = [];
     // time and index constants
-    let constants = { time: this.#timeOffset, index: this.#indexOffset };
+    let constants = {
+      time: this.#memSize + this.#timeOffset,
+      index: this.#memSize + this.#indexOffset,
+    };
     // Find all labels and constants
     preprocessedCode.forEach((line) => {
       // If starts with @
@@ -100,8 +105,8 @@ export class Interpreter {
 
     if (this.#DEBUG) console.log(this.#code);
 
-    // 2 registers, 4096 regular memory
-    this.#mem = new Array(4098).fill(0);
+    // Array large enough to hold normal memory and all the registers
+    this.#mem = new Array(this.#memSize + this.#numberOfRegisters).fill(0);
     this.#pc = 0;
     this.#overflow = false;
     if (this.#active && this.#code.length > 0) {
@@ -129,7 +134,8 @@ export class Interpreter {
     if (this.#DEBUG) console.log(this.#mem);
     const opcode = this.#code[this.#pc][0].toUpperCase();
     const preprocessedOperands = this.#code[this.#pc].slice(1);
-    this.#mem[this.#timeOffset + this.#memOffset]++;
+    // Increment the time
+    this.#mem[this.#memSize + this.#timeOffset]++;
     this.#pc++;
 
     let operands = [];
@@ -144,12 +150,12 @@ export class Interpreter {
 
       if (indexed) {
         // Add index register
-        processedOperand += this.#mem[this.#indexOffset + this.#memOffset];
+        processedOperand += this.#mem[this.#memSize + this.#indexOffset];
       }
 
       for (let i = 0; i < redirections; i++) {
         // Set value to what is held at the address
-        processedOperand = this.#mem[processedOperand + this.#memOffset];
+        processedOperand = this.#mem[processedOperand];
       }
 
       operands.push(processedOperand);
@@ -271,71 +277,71 @@ export class Interpreter {
   }
 
   #cpy(operands) {
-    this.#mem[operands[1] + this.#memOffset] = operands[0];
+    this.#mem[operands[1]] = operands[0];
   }
 
   #swp(operands) {
-    const temp = this.#mem[operands[1] + this.#memOffset];
-    this.#mem[operands[1] + this.#memOffset] =
-      this.#mem[operands[0] + this.#memOffset];
-    this.#mem[operands[0] + this.#memOffset] = temp;
+    const temp = this.#mem[operands[1]];
+    this.#mem[operands[1]] =
+      this.#mem[operands[0]];
+    this.#mem[operands[0]] = temp;
   }
 
   #add(operands) {
-    this.#mem[operands[2] + this.#memOffset] = operands[0] + operands[1];
+    this.#mem[operands[2]] = operands[0] + operands[1];
   }
 
   #sub(operands) {
-    this.#mem[operands[2] + this.#memOffset] = operands[0] - operands[1];
+    this.#mem[operands[2]] = operands[0] - operands[1];
   }
 
   #inc(operands) {
-    this.#mem[operands[0] + this.#memOffset]++;
+    this.#mem[operands[0]]++;
   }
 
   #dec(operands) {
-    this.#mem[operands[0] + this.#memOffset]--;
+    this.#mem[operands[0]]--;
   }
 
   #mul(operands) {
-    this.#mem[operands[2] + this.#memOffset] = operands[0] * operands[1];
+    this.#mem[operands[2]] = operands[0] * operands[1];
   }
 
   #div(operands) {
     if (operands[1] === 0) {
       // Store 0 when dividing by 0
       this.#overflow = true;
-      this.#mem[operands[2] + this.#memOffset] = 0;
+      this.#mem[operands[2]] = 0;
     } else {
       this.#overflow = false;
-      this.#mem[operands[2] + this.#memOffset] = Math.floor(
+      this.#mem[operands[2]] = Math.floor(
         operands[0] / operands[1],
       );
     }
   }
 
   #mod(operands) {
-    this.#mem[operands[2] + this.#memOffset] = operands[0] % operands[1];
+    this.#mem[operands[2]] = operands[0] % operands[1];
   }
 
   #and(operands) {
     // A value >= 1 is considered truthy
-    this.#mem[operands[2] + this.#memOffset] =
+    this.#mem[operands[2]] =
       operands[0] >= 1 && operands[1] >= 1;
   }
 
   #orr(operands) {
-    this.#mem[operands[2] + this.#memOffset] =
+    this.#mem[operands[2]] =
       operands[0] >= 1 || operands[1] >= 1;
   }
 
   #xor(operands) {
-    this.#mem[operands[2] + this.#memOffset] =
+    this.#mem[operands[2]] =
       operands[0] >= 1 ? operands[1] < 1 : operands[1] >= 1;
   }
 
   #not(operands) {
-    this.#mem[operands[1] + this.#memOffset] = operands[0] < 1;
+    this.#mem[operands[1]] = operands[0] < 1;
   }
 
   #jmp(operands) {
@@ -404,19 +410,19 @@ export class Interpreter {
   }
 
   #pop(operands) {
-    this.#mem[operands[0] + this.#memOffset] = this.#stack.pop();
+    this.#mem[operands[0]] = this.#stack.pop();
   }
 
   #rng(operands) {
     // Store a random number between min and max, inclusive
-    this.#mem[operands[2] + this.#memOffset] = Math.floor(
+    this.#mem[operands[2]] = Math.floor(
       Math.random() * (operands[1] - operands[0] + 1) + operands[0],
     );
   }
 
   #inp(operands) {
     // Stores 0 if there are no inputs to process
-    this.#mem[operands[0] + this.#memOffset] = this.#inputQueue.dequeue();
+    this.#mem[operands[0]] = this.#inputQueue.dequeue();
   }
 
   #out(operands) {
