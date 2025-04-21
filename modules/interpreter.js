@@ -474,16 +474,16 @@ export class Interpreter {
   }
 
   #sfx(operands) {
-    // Play tone for 400ms at provided frequency
+    // Play tone for 500ms at provided frequency
     let audioContext = new AudioContext();
     let oscillator = audioContext.createOscillator();
     oscillator.type = "sine";
-    oscillator.frequency.value = operands[0] * 50 + 50;
+    oscillator.frequency.value = operands[0];
     oscillator.connect(audioContext.destination);
     oscillator.start();
     setTimeout(() => {
       oscillator.stop();
-    }, 400);
+    }, 500);
   }
 
   #hlt() {
