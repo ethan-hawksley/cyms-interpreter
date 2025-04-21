@@ -1,0 +1,26 @@
+.const KEY_ZERO 48 // ASCII key codes
+.const KEY_NINE 57
+.const KEY_X 120
+
+@inputloop
+INP 0 // Store the latest input to address 0
+
+// End the program if the keycode matches X.
+BRE @end $0 KEY_X
+// Branch to loop if the keycode is less than zero's keycode.
+BRL @inputloop $0 KEY_ZERO 
+// Branch to loop if the keycode is greater than nine's keycode.
+BRG @inputloop $0 KEY_NINE
+
+// As execution has not branched, a number key must have been pressed.
+// Normalise the keycode to be 0-9.
+SUB $0 KEY_ZERO 1
+// Make it ten times larger so a wider range of frequencies are available.
+MUL $1 10 1
+// Play the corresponding tone.
+SFX $1
+
+JMP @inputloop
+
+@end
+HLT
