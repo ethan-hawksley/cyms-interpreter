@@ -1,0 +1,70 @@
+.const STARTING_X 0 // Starting coordinates
+.const STARTING_Y 0
+.const SIZE_X 7 // Size
+.const SIZE_Y 5
+.const MOVEMENT 5 // Diagonal movement each step
+.const SCREEN_X 255 // Screen bounds
+.const SCREEN_Y 144
+.const MIN_X 0
+.const MIN_Y 0
+.const x 0 // Memory addresses for storing coordinates
+.const y 1
+.const max_x 2 // Dynamically calculated upper bounds
+.const max_y 3
+.const colour 4 // Stores current colour
+
+// Initialise starting coordinates
+CPY STARTING_X x
+CPY STARTING_Y y
+
+// Calculate upper bounds
+SUB SCREEN_X SIZE_X max_x
+SUB $max_x MOVEMENT max_x
+SUB SCREEN_Y SIZE_Y max_y
+SUB $max_y MOVEMENT max_y
+
+@down_right
+// Generate random colour
+RNG 0 15 colour
+@down_right_loop
+// Increment x and y to move down right
+// The top-left corner is (0,0)
+ADD $x MOVEMENT x
+ADD $y MOVEMENT y
+// If out of bounds, branch to corresponding new direction
+BRG @down_left $x $max_x
+BRG @up_right $y $max_y
+// Draw shape
+DRW $x $y SIZE_X SIZE_Y $colour
+// Loop
+JMP @down_right_loop
+
+@down_left
+RNG 0 15 colour
+@down_left_loop
+SUB $x MOVEMENT x
+ADD $y MOVEMENT y
+BRL @down_right $x MIN_X
+BRG @up_left $y $max_y
+DRW $x $y SIZE_X SIZE_Y $colour
+JMP @down_left_loop
+
+@up_right
+RNG 0 15 colour
+@up_right_loop
+ADD $x MOVEMENT x
+SUB $y MOVEMENT y
+BRG @up_left $x $max_x
+BRL @down_right $y MIN_Y
+DRW $x $y SIZE_X SIZE_Y $colour
+JMP @up_right_loop
+
+@up_left
+RNG 0 15 colour
+@up_left_loop
+SUB $x MOVEMENT x
+SUB $y MOVEMENT y
+BRL @up_right $x MIN_X
+BRL @down_left $y MIN_Y
+DRW $x $y SIZE_X SIZE_Y $colour
+JMP @up_left_loop
