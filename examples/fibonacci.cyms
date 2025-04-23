@@ -4,7 +4,7 @@
 .const num2 2 // Address of num2
 
 // Initialise variables.
-cpy 0 i
+CPY 0 i
 CPY 1 num1
 CPY 0 num2
 
