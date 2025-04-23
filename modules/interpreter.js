@@ -109,8 +109,7 @@ export class Interpreter {
     this.#pc = 0;
     if (this.#active && this.#code.length > 0) {
       this.#terminal.log("Started");
-      // Run a cycle each frame
-      requestAnimationFrame(() => this.#cycle());
+      this.#cycle();
     } else {
       this.#terminate();
     }
@@ -264,7 +263,7 @@ export class Interpreter {
       this.#terminate();
     }
     if (this.#active) {
-      requestAnimationFrame(() => this.#cycle());
+      setTimeout(() => this.#cycle());
     }
   }
 
