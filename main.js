@@ -73,7 +73,7 @@ for (let i = 0; i < loadExampleButtons.length; i++) {
     );
     promise.then((response) => {
       response.text().then((text) => {
-        // Set code box to the 
+        // Set code box to the
         cymsCode.value = text;
       });
     });

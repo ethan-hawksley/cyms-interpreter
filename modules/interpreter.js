@@ -253,7 +253,7 @@ export class Interpreter {
         this.#hlt();
         break;
       default:
-        this.#terminal.error('Unknown instruction "' + opcode + '"');
+        this.#terminal.error("Unknown instruction " + opcode);
         this.#terminate();
         break;
     }
