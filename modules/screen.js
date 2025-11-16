@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 
 export class Screen {
   #screen;
   #ctx;
 
   constructor() {
-    this.#screen = document.getElementById("screen");
-    this.#ctx = this.#screen.getContext("2d");
+    this.#screen = document.getElementById('screen');
+    this.#ctx = this.#screen.getContext('2d');
 
-    this.#ctx.fillStyle = "black";
+    this.#ctx.fillStyle = 'black';
     this.#ctx.fillRect(0, 0, 255, 144);
   }
 
   clear() {
-    this.#ctx.fillStyle = "black";
+    this.#ctx.fillStyle = 'black';
     this.#ctx.fillRect(0, 0, 255, 144);
   }
 

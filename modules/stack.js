@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export class Stack {
   #stack;
@@ -15,7 +15,7 @@ export class Stack {
     if (this.#stack.length > 0) {
       return this.#stack.pop();
     }
-    console.error("Popped empty stack");
+    console.error('Popped empty stack');
     // By default, return 0.
     return 0;
   }

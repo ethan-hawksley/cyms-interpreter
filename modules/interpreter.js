@@ -1,8 +1,8 @@
-"use strict";
-import { Terminal } from "./terminal.js";
-import { Stack } from "./stack.js";
-import { Queue } from "./queue.js";
-import { Screen } from "./screen.js";
+'use strict';
+import { Terminal } from './terminal.js';
+import { Stack } from './stack.js';
+import { Queue } from './queue.js';
+import { Screen } from './screen.js';
 
 export class Interpreter {
   #DEBUG;
@@ -30,7 +30,7 @@ export class Interpreter {
     this.#indexOffset = 1;
     this.#screen = new Screen();
     this.#inputQueue = new Queue();
-    document.addEventListener("keyup", (event) => {
+    document.addEventListener('keyup', (event) => {
       if (this.#active) {
         this.#inputQueue.enqueue(event.key.charCodeAt(0));
       }
@@ -46,10 +46,10 @@ export class Interpreter {
     this.#screen.clear();
     this.#active = true;
     const preprocessedCode = code
-      .split("\n") // split into each codeline
-      .map((i) => i.split("//")[0].trim()) // remove anything after //
-      .filter((i) => i !== "") // remove blank lines
-      .map((i) => i.split(" ")); // turn into array of opcode and operands
+      .split('\n') // split into each codeline
+      .map((i) => i.split('//')[0].trim()) // remove anything after //
+      .filter((i) => i !== '') // remove blank lines
+      .map((i) => i.split(' ')); // turn into array of opcode and operands
     // 4096 normal addresses, time, and index
     // +2 offset applied to each access of the array
     this.#code = [];
@@ -63,16 +63,16 @@ export class Interpreter {
     // Find all labels and constants
     preprocessedCode.forEach((line) => {
       // If starts with @
-      if (line[0][0] === "@") {
+      if (line[0][0] === '@') {
         if (line.length !== 1) {
-          this.#terminal.error("Invalid label expression");
+          this.#terminal.error('Invalid label expression');
           this.#active = false;
         }
         constants[line[0]] = lineNumber.toString();
         // If a constant
-      } else if (line[0] === ".const") {
+      } else if (line[0] === '.const') {
         if (line.length !== 3) {
-          this.#terminal.error("Invalid .const expression");
+          this.#terminal.error('Invalid .const expression');
           this.#active = false;
         }
 
@@ -89,14 +89,14 @@ export class Interpreter {
       let instruction = [line[0]];
       line.slice(1).map((operand) => {
         // Handle constants
-        let cleanOperand = operand.replace(/[#$]/g, "");
+        let cleanOperand = operand.replace(/[#$]/g, '');
         if (cleanOperand in constants) {
           cleanOperand = constants[cleanOperand];
         }
         // How many times to redirect
-        cleanOperand += "$".repeat((operand.match(/[$]/g) || []).length);
+        cleanOperand += '$'.repeat((operand.match(/[$]/g) || []).length);
         // If indexed or not
-        cleanOperand += "#".repeat((operand.match(/#/g) || []).length);
+        cleanOperand += '#'.repeat((operand.match(/#/g) || []).length);
         instruction.push(cleanOperand);
       });
       this.#code.push(instruction);
@@ -108,7 +108,7 @@ export class Interpreter {
     this.#mem = new Array(this.#memSize + this.#numberOfRegisters).fill(0);
     this.#pc = 0;
     if (this.#active && this.#code.length > 0) {
-      this.#terminal.log("Started");
+      this.#terminal.log('Started');
       this.#cycle();
     } else {
       this.#terminate();
@@ -116,15 +116,15 @@ export class Interpreter {
   }
 
   stop() {
-    this.#terminal.log("Stopped");
+    this.#terminal.log('Stopped');
     this.#terminate();
   }
 
   #terminate() {
     this.#active = false;
-    document.getElementById("start").disabled = false;
-    document.getElementById("stop").disabled = true;
-    document.getElementById("cyms-code").disabled = false;
+    document.getElementById('start').disabled = false;
+    document.getElementById('stop').disabled = true;
+    document.getElementById('cyms-code').disabled = false;
   }
 
   #cycle() {
@@ -143,7 +143,7 @@ export class Interpreter {
       const indexed = (operand.match(/#/) || []).length >= 1;
 
       // Remove $ and #, then parse as int
-      let processedOperand = parseInt(operand.replace(/[#$]/g, ""), 10);
+      let processedOperand = parseInt(operand.replace(/[#$]/g, ''), 10);
 
       if (indexed) {
         // Add index register
@@ -159,107 +159,107 @@ export class Interpreter {
     });
 
     switch (opcode) {
-      case "NOP":
-      case "LOG": // LOG is unimplemented
+      case 'NOP':
+      case 'LOG': // LOG is unimplemented
         break;
-      case "CPY":
+      case 'CPY':
         this.#cpy(operands);
         break;
-      case "SWP":
+      case 'SWP':
         this.#swp(operands);
         break;
-      case "ADD":
+      case 'ADD':
         this.#add(operands);
         break;
-      case "SUB":
+      case 'SUB':
         this.#sub(operands);
         break;
-      case "INC":
+      case 'INC':
         this.#inc(operands);
         break;
-      case "DEC":
+      case 'DEC':
         this.#dec(operands);
         break;
-      case "MUL":
+      case 'MUL':
         this.#mul(operands);
         break;
-      case "DIV":
+      case 'DIV':
         this.#div(operands);
         break;
-      case "MOD":
+      case 'MOD':
         this.#mod(operands);
         break;
-      case "AND":
+      case 'AND':
         this.#and(operands);
         break;
-      case "ORR":
+      case 'ORR':
         this.#orr(operands);
         break;
-      case "XOR":
+      case 'XOR':
         this.#xor(operands);
         break;
-      case "NOT":
+      case 'NOT':
         this.#not(operands);
         break;
-      case "JMP":
+      case 'JMP':
         this.#jmp(operands);
         break;
-      case "BRG":
+      case 'BRG':
         this.#brg(operands);
         break;
-      case "BNG":
+      case 'BNG':
         this.#bng(operands);
         break;
-      case "BRE":
+      case 'BRE':
         this.#bre(operands);
         break;
-      case "BNE":
+      case 'BNE':
         this.#bne(operands);
         break;
-      case "BRL":
+      case 'BRL':
         this.#brl(operands);
         break;
-      case "BNL":
+      case 'BNL':
         this.#bnl(operands);
         break;
-      case "JSR":
+      case 'JSR':
         this.#jsr(operands);
         break;
-      case "RTS":
+      case 'RTS':
         this.#rts();
         break;
-      case "PSH":
+      case 'PSH':
         this.#psh(operands);
         break;
-      case "POP":
+      case 'POP':
         this.#pop(operands);
         break;
-      case "RNG":
+      case 'RNG':
         this.#rng(operands);
         break;
-      case "INP":
+      case 'INP':
         this.#inp(operands);
         break;
-      case "OUT":
+      case 'OUT':
         this.#out(operands);
         break;
-      case "DRW":
+      case 'DRW':
         this.#drw(operands);
         break;
-      case "SFX":
+      case 'SFX':
         this.#sfx(operands);
         break;
-      case "HLT":
+      case 'HLT':
         this.#hlt();
         break;
       default:
-        this.#terminal.error("Unknown instruction " + opcode);
+        this.#terminal.error('Unknown instruction ' + opcode);
         this.#terminate();
         break;
     }
 
     if (this.#pc >= this.#code.length) {
-      this.#terminal.log("Finished");
+      this.#terminal.log('Finished');
       this.#terminate();
     }
     if (this.#active) {
@@ -407,59 +407,59 @@ export class Interpreter {
   }
 
   #drw(operands) {
-    let colour = "";
+    let colour = '';
     // Select the correct colour
     switch (operands[4]) {
       case 0:
-        colour = "#FFFFFF";
+        colour = '#FFFFFF';
         break;
       case 1:
-        colour = "#9D9D97";
+        colour = '#9D9D97';
         break;
       case 2:
-        colour = "#474F52";
+        colour = '#474F52';
         break;
       case 3:
-        colour = "#000000";
+        colour = '#000000';
         break;
       case 4:
-        colour = "#835432";
+        colour = '#835432';
         break;
       case 5:
-        colour = "#B02E26";
+        colour = '#B02E26';
         break;
       case 6:
-        colour = "#F9801D";
+        colour = '#F9801D';
         break;
       case 7:
-        colour = "#FED83D";
+        colour = '#FED83D';
         break;
       case 8:
-        colour = "#80C71F";
+        colour = '#80C71F';
         break;
       case 9:
-        colour = "#5E7C16";
+        colour = '#5E7C16';
         break;
       case 10:
-        colour = "#169C9C";
+        colour = '#169C9C';
         break;
       case 11:
-        colour = "#3AB3DA";
+        colour = '#3AB3DA';
         break;
       case 12:
-        colour = "#3C44AA";
+        colour = '#3C44AA';
         break;
       case 13:
-        colour = "#8932B8";
+        colour = '#8932B8';
         break;
       case 14:
-        colour = "#C74EBD";
+        colour = '#C74EBD';
         break;
       case 15:
-        colour = "#F38BAA";
+        colour = '#F38BAA';
         break;
       default:
-        this.#terminal.error("Invalid colour code " + operands[4]);
+        this.#terminal.error('Invalid colour code ' + operands[4]);
         this.#terminate();
         break;
     }
@@ -476,7 +476,7 @@ export class Interpreter {
     // Play tone for 500ms at provided frequency
     let audioContext = new AudioContext();
     let oscillator = audioContext.createOscillator();
-    oscillator.type = "sine";
+    oscillator.type = 'sine';
     oscillator.frequency.value = operands[0];
     oscillator.connect(audioContext.destination);
     oscillator.start();
@@ -486,7 +486,7 @@ export class Interpreter {
   }
 
   #hlt() {
-    this.#terminal.log("Halted");
+    this.#terminal.log('Halted');
     this.#terminate();
   }
 }

@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 export class Terminal {
   #element;
   #maxEntries;
 
   constructor() {
-    this.#element = document.getElementById("terminal");
+    this.#element = document.getElementById('terminal');
     this.#maxEntries = 100;
   }
 
@@ -14,11 +14,11 @@ export class Terminal {
   }
 
   log(message) {
-    this.#print(message, "log-entry");
+    this.#print(message, 'log-entry');
   }
 
   error(message) {
-    this.#print(message, "error-entry");
+    this.#print(message, 'error-entry');
   }
 
   #print(message, type) {
@@ -29,8 +29,8 @@ export class Terminal {
     if (this.#element.childElementCount >= this.#maxEntries) {
       this.#element.removeChild(this.#element.firstChild);
     }
-    const entry = document.createElement("li");
-    entry.classList.add("entry", type);
+    const entry = document.createElement('li');
+    entry.classList.add('entry', type);
     entry.textContent = message;
     this.#element.appendChild(entry);
 
