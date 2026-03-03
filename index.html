@@ -1,77 +1,104 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link href="style.css" rel="stylesheet" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>CYMS Online Interpreter</title>
-    <link rel="icon" href="favicon.svg" />
-    <link rel="canonical" href="https://hawksley.dev/cyms-interpreter/" />
-    <meta
-      name="description"
-      content="Online interpreter for the CYMS programming language. Featuring a code editor, a terminal, a screen, and more!"
-    />
-  </head>
-  <body>
-    <div id="container">
-      <dialog id="examples">
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>CYMS Online Interpreter | Ethan Hawksley</title>
+
+    <link href="style.css" rel="stylesheet"/>
+
+    <meta content="Online interpreter for the CYMS programming language. Featuring a code editor, terminal, screen canvas, and example programs."
+          name="description"/>
+    <meta content="Ethan Hawksley" name="author"/>
+    <meta content="max-image-preview:large, max-snippet:-1, max-video-preview:-1" name="robots"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="light" name="color-scheme"/>
+    <meta content="#222" name="theme-color"/>
+
+    <link href="https://hawksley.dev/cyms-interpreter/" rel="canonical"/>
+
+    <link href="/favicon.svg?v=2" rel="icon" type="image/svg+xml"/>
+    <link href="/favicon-48x48.png?v=2" rel="icon" sizes="48x48" type="image/png"/>
+    <link href="/favicon.ico?v=2" rel="icon" type="image/x-icon"/>
+    <link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
+
+    <meta content="website" property="og:type"/>
+    <meta content="https://hawksley.dev/cyms-interpreter/" property="og:url"/>
+    <meta content="CYMS Online Interpreter | Ethan Hawksley" property="og:title"/>
+    <meta content="Online interpreter for the CYMS programming language. Featuring a code editor, terminal, screen canvas, and example programs."
+          property="og:description"/>
+    <meta content="Ethan Hawksley" property="og:site_name"/>
+    <meta content="en_GB" property="og:locale"/>
+    <meta content="https://hawksley.dev/og-image-1200x630.png?v=2" property="og:image"/>
+    <meta content="CYMS Online Interpreter" property="og:image:alt"/>
+    <meta content="1200" property="og:image:width"/>
+    <meta content="630" property="og:image:height"/>
+    <meta content="image/png" property="og:image:type"/>
+
+    <meta content="summary_large_image" name="twitter:card"/>
+    <meta content="@Ethan_Hawksley" name="twitter:site"/>
+    <meta content="@Ethan_Hawksley" name="twitter:creator"/>
+</head>
+<body>
+<div id="container">
+    <dialog id="examples">
         <div id="examples-container">
-          <button id="close-examples">Close</button>
-          <button data-file-name="fibonacci" class="load-example">
-            Fibonacci Numbers
-          </button>
-          <button data-file-name="sound" class="load-example">
-            Sound Player
-          </button>
-          <button data-file-name="graphics" class="load-example">
-            Graphics Demo
-          </button>
+            <button id="close-examples">Close</button>
+            <button class="load-example" data-file-name="fibonacci">
+                Fibonacci Numbers
+            </button>
+            <button class="load-example" data-file-name="sound">
+                Sound Player
+            </button>
+            <button class="load-example" data-file-name="graphics">
+                Graphics Demo
+            </button>
         </div>
-      </dialog>
-      <h1>CYMS Interpreter</h1>
-      <main>
+    </dialog>
+    <h1>CYMS Interpreter</h1>
+    <main>
         <div id="left-bar">
-          <div id="left-header">
-            <label for="cyms-code" id="code-label">CYMS Instructions</label>
-            <button class="control-button" id="start">Start</button>
-            <button class="control-button" id="stop">Stop</button>
-            <button class="control-button" id="save">Save</button>
-            <input
-              accept=".cyms"
-              id="load-input"
-              name="load-input"
-              style="display: none"
-              type="file"
-            />
-            <button class="control-button" id="load">Load</button>
-          </div>
-          <textarea
-            autocapitalize="off"
-            autocomplete="off"
-            cols="30"
-            id="cyms-code"
-            placeholder="Enter code here"
-            rows="30"
-            spellcheck="false"
-          ></textarea>
+            <div id="left-header">
+                <label for="cyms-code" id="code-label">CYMS Instructions</label>
+                <button class="control-button" id="start">Start</button>
+                <button class="control-button" id="stop">Stop</button>
+                <button class="control-button" id="save">Save</button>
+                <input
+                        accept=".cyms"
+                        id="load-input"
+                        name="load-input"
+                        style="display: none"
+                        type="file"
+                />
+                <button class="control-button" id="load">Load</button>
+            </div>
+            <textarea
+                    autocapitalize="off"
+                    autocomplete="off"
+                    cols="30"
+                    id="cyms-code"
+                    placeholder="Enter code here"
+                    rows="30"
+                    spellcheck="false"
+            ></textarea>
         </div>
         <div id="right-bar">
-          <div id="connections">
-            <a class="connection-link" href="https://hawksley.dev">Home</a>
-            <a
-              class="connection-link"
-              href="https://github.com/ethan-hawksley/cyms-interpreter"
-              >Repository</a
-            >
-            <button class="connection-link" id="show-examples">
-              Show Examples
-            </button>
-          </div>
-          <canvas height="144" id="screen" width="255"></canvas>
-          <ul id="terminal"></ul>
+            <div id="connections">
+                <a class="connection-link" href="https://hawksley.dev">Home</a>
+                <a
+                        class="connection-link"
+                        href="https://github.com/ethan-hawksley/cyms-interpreter"
+                >Repository</a
+                >
+                <button class="connection-link" id="show-examples">
+                    Show Examples
+                </button>
+            </div>
+            <canvas height="144" id="screen" width="255"></canvas>
+            <ul id="terminal"></ul>
         </div>
-      </main>
-      <script src="./main.js" type="module"></script>
-    </div>
-  </body>
+    </main>
+    <script src="./main.js" type="module"></script>
+</div>
+</body>
 </html>
