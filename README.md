@@ -17,3 +17,7 @@ Some of its features include:
 - Input handling
 - Simple stack implementation
 - Flexible variety of addressing modes
+
+## Author
+
+[Ethan Hawksley](https://hawksley.dev)
